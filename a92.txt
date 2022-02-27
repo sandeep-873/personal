@@ -1,0 +1,286 @@
+Controller:
+@################
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using A9P1.Models;
+
+namespace A9P1.Controllers
+{
+    public class HomeController : Controller
+    {
+        // GET: Home
+        public ActionResult Index()
+        {
+            return View();
+        }
+        public ActionResult AboutUs()
+        {
+            return View();
+        }
+        public ActionResult Service()
+        {
+            return View();
+        }
+        public ActionResult ContactUs()
+        {
+            return View();
+        }
+        public ActionResult Login(LoginModel s)
+        {
+            if(ModelState.IsValid)
+            {
+                return RedirectToAction("Login");
+            }
+            return View(s);
+        }
+        public ActionResult Registration(RegModel p)
+        {
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction("Registration");
+            }
+            return View(p);
+        }
+
+    }
+}
+
+
+
+login model:
+#############
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.ComponentModel.DataAnnotations;
+
+
+namespace A9P1.Models
+{
+    public class LoginModel
+    {
+        [Required(ErrorMessage = "Name should be Required")]
+        public string UserName { get; set; }
+        [Required(ErrorMessage ="Password is Required")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+        [Required(ErrorMessage = "Confirm Password is required")]
+        [DataType(DataType.Password)]
+        [Compare("Password")]
+        public string ConfirmPassword { get; set; }
+
+
+
+    }
+        
+}
+
+
+register model:
+#########
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.ComponentModel.DataAnnotations;
+
+namespace A9P1.Models
+{
+    public class RegModel
+    {
+        public int UserId { get; set; }
+        [Required(ErrorMessage = "Name should be Required")]
+        public string UserName { get; set; }
+        [Required(ErrorMessage = "Age should be Required")]
+        [Range(18, 100, ErrorMessage = "Age should be Required")]
+        public string Age { get; set; }
+        [Required(ErrorMessage = "Email should be Required")]
+        [RegularExpression(@"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}", ErrorMessage = "Please enter Valid Email ID")]
+        public string Email { get; set; }
+        [Required(ErrorMessage = "Number should be Required")]
+        [RegularExpression(@"^([0-9]{10})$", ErrorMessage = "Please Enter Valid Mobile Number.")]
+        public string Mobile { get; set; }
+    }
+}
+
+
+
+
+index view:
+##############
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<h1>Welcome to NCS Company</h1>
+
+<div>
+    <img src="~/Photos/Welcome.png" width="700" height="300"/>
+    <img src="~/Photos/welcome2.jpg" width="500" height="300" />
+</div>
+
+
+
+
+
+
+
+
+
+about view:
+#################
+
+
+@{
+    ViewBag.Title = "AboutUs";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<h1>AboutUs</h1>
+
+
+<table style="width:100%;">
+    <tr>
+    <td>
+        <h3>
+            NCS is a leading technology services firm, operating across Asia Pacific, providing services and solutions in consulting,
+            digital, technology, cybersecurity and more.<br />
+
+            We believe in the power of technology to make extraordinary things happen and  to create lasting impact and value for our people,
+            communities and partners.
+        </h3>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="~/Photos/About-Us.jpg" width="400" height="300"/>
+            </td>
+        <tr>
+        
+</table>
+
+
+
+
+
+contactus:
+#################
+
+@{
+    ViewBag.Title = "ContactUs";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<h1>ContactUs</h1>
+<div>
+    <img src="~/Photos/ContactUs2.jpg" width="500" height="300"/>
+</div>
+<div>
+    <h3>
+
+        We Love Good Connections!<br />
+        Feel free to contact us for questions and more information.<br />
+
+        We can also offer you a webex session or a test running of the systems in your company.<br />
+        Pune<br/>
+
+        5th Floor, IT 7 Building,<br />
+        Blue Ridge Phase II, Blue Ridge Township, <br />
+        Hinjewadi Pune 411057,<br /> Maharashtra,India <br />
+        Pune, IN
+    </h3>
+</div>
+
+
+
+
+
+
+service:
+################
+
+@{
+    ViewBag.Title = "Service";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<h1>Service</h1>
+<div>
+    <img src="~/Photos/service2.jpg" width="500" height="300"/>
+
+</div>
+<div>
+    <h3>
+        NCS services include architecture and design consulting, development services, product customization services,
+        alogorithm and protocol development and integration services to help solve tough design
+        challenges and accelerate hardware/software development in the area of Wired and Wireless Networks.<br/>
+
+        Our team is committed to bringing you high quality deliverables to provide optimized and cost effective
+        solutions to your company’s hardware and software requirements. However, sometimes you may find out that the
+        product is lacking some of features which are important for you. What to do? You can hire our professionals.<br />
+
+        Our development team consists of highly skilled professionals who have a wide experience in product development cycle.
+        We assure you that our team will make all the improvements you require quickly and with the very best quality.
+        All modifications will be closely integrated with the product
+    </h3>
+</div>
+
+
+
+
+
+Layout
+#############
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+   
+    
+</head>
+<body>
+    <nav>
+        <header style="height:50px; background-color:aliceblue">
+            <div>
+                @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { })&nbsp;
+                @Html.ActionLink("AboutUs", "AboutUs", "Home", new { area = "" }, new { })&nbsp;
+                @Html.ActionLink("Service", "Service", "Home", new { area = "" }, new { })&nbsp;
+                @Html.ActionLink("ContactUs", "ContactUs", "Home", new { area = "" }, new { })&nbsp;
+                @Html.ActionLink("Login", "Login", "Home", new { area = "" }, new { })&nbsp;
+                @Html.ActionLink("Registration", "Registration", "Home", new { area = "" }, new { })&nbsp;
+            </div>
+
+        </header>
+        
+        
+        
+        <table style="width:100%;">
+           
+
+            <tr>
+                <td>@RenderBody()</td>
+
+            </tr>
+
+        </table>
+
+
+    </nav>
+    <footer align="center" style="height:100px; background-color:aliceblue">
+        <div class="container">
+            &copy; ncs company @DateTime.Now.Year
+        </div>
+    </footer>
+    
+</body>
+</html>
