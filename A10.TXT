@@ -1,0 +1,428 @@
+Controller
+#################
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using CodeFirstApproach.Models;
+
+
+namespace CodeFirstApproach.Controllers
+{
+    public class HomeController : Controller
+    {
+        EMPmodelDBContext obj = new EMPmodelDBContext();
+        // GET: Home
+        public ActionResult Index()
+        {
+            return View(obj.EMPmodels.ToList());
+         
+        }
+        [HttpGet]
+        public ActionResult Create()
+        {
+         return View();
+        }
+        [HttpPost]
+        public ActionResult Create(EMPmodel userobj)
+        {
+            obj.EMPmodels.Add(userobj);
+            obj.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public ActionResult Edit(string id)
+        {
+            int EId = Convert.ToInt32(id);
+            var emp = obj.EMPmodels.Find(EId);
+            return View(emp);
+        }
+        [HttpPost]
+        public ActionResult Edit(EMPmodel userobj)
+        {
+            var data = obj.EMPmodels.Find(userobj.ID);
+            if (data != null)
+            {
+                data.Name = userobj.Name;
+                data.Email = userobj.Email;
+                data.Email = userobj.Email;
+            }
+             obj.SaveChanges();
+            return RedirectToAction("Index");
+        }
+       
+        public ActionResult Details(string id)
+        {
+            int empId = Convert.ToInt32(id);
+            var emp = obj.EMPmodels.Find(empId);
+            return View(emp);
+        }
+        [HttpGet]
+        public ActionResult Delete(string id)
+        {
+            int empId = Convert.ToInt32(id);
+            var emp1 = obj.EMPmodels.Find(empId);
+            return View(emp1);
+        }
+        [HttpPost]
+
+        public ActionResult Delete(EMPmodel objEmp)
+        {
+            var data = obj.EMPmodels.Find(objEmp.ID);
+            obj.EMPmodels.Remove(data);
+            obj.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
+
+
+    }
+}
+
+
+
+EMPmodel 1
+###################
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Microsoft.EntityFrameworkCore;
+
+namespace CodeFirstApproach.Models
+{
+    public class EMPmodel
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string City { get; set; }
+    }
+    
+}
+
+
+
+
+
+EMPmodelDBContext 2
+############
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Web;
+using CodeFirstApproach.Models;
+
+namespace CodeFirstApproach.Models
+{
+    public class EMPmodelDBContext: DbContext
+    {
+        public EMPmodelDBContext() : base("EMP")
+        {
+        }
+        public DbSet<EMPmodel> EMPmodels { get; set; }
+        public object EmpTable { get; set; }
+    }
+}
+
+
+
+
+Create View
+###########
+
+@model CodeFirstApproach.Models.EMPmodel
+
+@{
+    ViewBag.Title = "create";
+}
+
+<h2>create</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>EMPmodel</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
+
+
+
+
+
+Delete View
+###########
+
+@model CodeFirstApproach.Models.EMPmodel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>EMPmodel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
+
+
+
+
+
+
+
+Details View
+###############
+
+@model CodeFirstApproach.Models.EMPmodel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>EMPmodel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+
+
+
+
+
+Edit View
+#################
+
+@model CodeFirstApproach.Models.EMPmodel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>EMPmodel</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
+
+
+Index View
+############
+
+@model IEnumerable<CodeFirstApproach.Models.EMPmodel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.City)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.City)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
+
+
